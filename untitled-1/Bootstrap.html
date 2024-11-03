@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul des Indicateurs de Santé</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom styles */
+        .progress-bar.bg-green-500 {
+            background-color: #28a745;
+        }
+        .progress-bar.bg-yellow-500 {
+            background-color: #ffc107;
+        }
+        .progress-bar.bg-red-600 {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container my-5">
+        <h1 class="text-center">Tableau de Bord de Santé</h1>
+        <div class="btn-group my-3" role="group">
+            <button id="nav-profile" class="btn btn-outline-primary">Profil <i class="fas fa-user"></i></button>
+            <button id="nav-health" class="btn btn-outline-success">Santé <i class="fas fa-heartbeat"></i></button>
+            <button id="nav-finance" class="btn btn-outline-info">Finance <i class="fas fa-coins"></i></button>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile-section" class="my-3">
+            <h2>Profil</h2>
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" class="form-control" id="name" placeholder="Entrez votre nom">
+            </div>
+            <div class="form-group">
+                <label for="birthdate">Date de Naissance</label>
+                <input type="date" class="form-control" id="birthdate">
+            </div>
+            <div class="form-group">
+                <label for="sex">Sexe</label>
+                <select class="form-control" id="sex">
+                    <option value="male">Homme</option>
+                    <option value="female">Femme</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="height">Taille (cm)</label>
+                <input type="number" class="form-control" id="height" placeholder="Entrez votre taille en cm">
+            </div>
+            <div class="form-group">
+                <label for="weight">Poids (kg)</label>
+                <input type="number" class="form-control" id="weight" placeholder="Entrez votre poids en kg">
+            </div>
+            <div class="form-group">
+                <label for="nap">Niveau d'activité physique (NAP)</label>
+                <input type="number" step="0.1" class="form-control" id="nap" placeholder="Ex: 1.2 pour faible, 1.5 pour moyen, etc.">
+            </div>
+            <button id="save-profile" class="btn btn-primary">Sauvegarder le Profil</button>
+        </div>
+
+        <!-- Health Section -->
+        <div id="health-section" class="my-3" style="display: none;">
+            <h2>Métriques de Santé</h2>
+            <p id="profile-info"></p>
+            <p>IMC: <span id="bmi"></span></p>
+            <p>Poids idéal: <span id="ideal-weight"></span></p>
+            <p>Différence de poids: <span id="weight-difference"></span></p>
+            <p>Metabolisme de base (BMR): <span id="bmr"></span></p>
+            <p>Dépense énergétique journalière (TDEE): <span id="tdee"></span></p>
+            <p>Espérance de vie restante: <span id="life-expectancy"></span> ans</p>
+
+            <div class="progress my-3">
+                <div id="life-expectancy-progress" class="progress-bar" role="progressbar" style="width: 0%;">
+                    <span id="progress-text">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finance Section -->
+        <div id="finance-section" class="my-3" style="display: none;">
+            <h2>Finance</h2>
+            <p>Section finance en construction...</p>
+        </div>
+    </div>
+
+    <!-- jQuery, Bootstrap JS, and Font Awesome JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Place your JavaScript code here
+        // 🚀 UTILITAIRES
+        function calculateAge(birthdate) { // 👶 ÂGE CALCUL
+            const birth = new Date(birthdate);
+            const today = new Date();
+            const diffTime = today - birth;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const years = Math.floor(diffDays / 365);
+            const days = diffDays % 365;
+            return { years, days };
+        }
+
+        function fetchLifeExpectancy(sex, country = "FRA") {
+            const indicator = sex === 'male' ? 'SP.DYN.LE00.MA.IN' : 'SP.DYN.LE00.FE.IN';
+            const apiUrl = `https://api.worldbank.org/v2/country/${country}/indicator/${indicator}?format=json&date=2022`;
+
+            return $.getJSON(apiUrl).then(data => {
+                if (data && data[1] && data[1][0] && data[1][0].value) {
+                    return data[1][0].value;
+                } else {
+                    console.error("❌ Erreur lors de la récupération de l'espérance de vie depuis l'API.");
+                    return sex === "male" ? 0 : 0; // 🚨 valeurs par défaut
+                }
+            });
+        }
+
+        // 📊 CALCUL DES INDICATEURS
+        function calculateBMI(weight, heightM) { // 🧮 IMC
+            return (weight / (heightM * heightM)).toFixed(2);
+        }
+
+        function calculateIdealWeight(heightM, sex) { // 🎯 POIDS IDÉAL
+            return ((sex === "male" ? 22 : 21) * (heightM * heightM)).toFixed(2);
+        }
+
+        function calculateBMR(weight, height, age, sex) { // 🔥 MÉTABOLISME DE BASE
+            return sex === "male" 
+                ? (88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)).toFixed(2)
+                : (447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)).toFixed(2);
+        }
+
+        function calculateTDEE(bmr, nap) { // 🌡️ DÉPENSE ÉNERGÉTIQUE
+            return (bmr * nap).toFixed(2);
+        }
+
+        // 💻 MISE À JOUR DU PROFIL ET DE L'UI
+        function updateHealthMetrics(profile) { // 🩺 MÉTRIQUES DE SANTÉ
+            const heightM = profile.height / 100;
+            const age = calculateAge(profile.birthdate);
+            const lifeExpectancy = profile.lifeExpectancy;
+            const remainingLife = (lifeExpectancy - age.years).toFixed(0);
+            const bmi = calculateBMI(profile.weight, heightM);
+            const idealWeight = calculateIdealWeight(heightM, profile.sex);
+            const bmr = calculateBMR(profile.weight, profile.height, age.years, profile.sex);
+            const tdee = calculateTDEE(bmr, profile.nap);
+            const weightDifference = (profile.weight - idealWeight).toFixed(1);
+            const lifePercentageRemaining = ((remainingLife / lifeExpectancy) * 100).toFixed(1);
+
+            // 📈 MISE À JOUR DES ÉLÉMENTS HTML
+            $('#profile-info').text(`${profile.name}, ${age.years} ans et ${age.days} jours`);
+            $('#bmi').text(bmi);
+            $('#ideal-weight').text(idealWeight);
+            $('#weight-difference').text(weightDifference > 0 ? `+${weightDifference} kg excédentaires` : `${Math.abs(weightDifference)} kg manquants`);
+            $('#bmr').text(bmr);
+            $('#tdee').text(tdee);
+            $('#life-expectancy').text(remainingLife);
+
+            // 🕒 Barre de progression
+            $('#life-expectancy-progress').css('width', `${lifePercentageRemaining}%`);
+            $('#progress-text').text(`${lifePercentageRemaining}%`);
+            updateProgressColor(lifePercentageRemaining);
+        }
+
+        function updateProgressColor(lifePercentageRemaining) { // 🎨 COULEUR DE PROGRESSION
+            const progressBar = $('#life-expectancy-progress');
+            progressBar.removeClass('bg-green-500 bg-yellow-500 bg-red-600');
+            if (lifePercentageRemaining < 25) {
+                progressBar.addClass('bg-red-600');
+            } else if (lifePercentageRemaining < 50) {
+                progressBar.addClass('bg-yellow-500');
+            } else {
+                progressBar.addClass('bg-green-500');
+            }
+        }
+
+        // 📂 GESTION DU PROFIL
+        async function saveProfile() { // 💾 SAUVEGARDE DU PROFIL
+            const profile = {
+                name: $('#name').val(),
+                birthdate: $('#birthdate').val(),
+                sex: $('#sex').val(),
+                height: parseFloat($('#height').val()),
+                weight: parseFloat($('#weight').val()),
+                nap: parseFloat($('#nap').val()) // NAP selection
+            };
+            profile.lifeExpectancy = await fetchLifeExpectancy(profile.sex);
+            localStorage.setItem('profile', JSON.stringify(profile));
+            updateHealthMetrics(profile);
+        }
+
+        function loadProfile() { // 📂 CHARGEMENT DU PROFIL
+            const profile = JSON.parse(localStorage.getItem('profile'));
+            if (profile) {
+                $('#name').val(profile.name);
+                $('#birthdate').val(profile.birthdate);
+                $('#sex').val(profile.sex);
+                $('#height').val(profile.height);
+                $('#weight').val(profile.weight);
+                $('#nap').val(profile.nap);
+                updateHealthMetrics(profile);
+            }
+        }
+
+        // 🔄 INITIALISATION ET ÉCOUTEURS
+        $(document).ready(function() {
+            loadProfile();
+            $('#save-profile').click(saveProfile);
+            $('#nav-health').click(function() { $('#health-section').show(); $('#finance-section, #profile-section').hide(); });
+            $('#nav-finance').click(function() { $('#finance-section').show(); $('#health-section, #profile-section').hide(); });
+            $('#nav-profile').click(function() { $('#profile-section').show(); $('#health-section, #finance-section').hide(); });
+        });
+    </script>
+</body>
+
+</html>

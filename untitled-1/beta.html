@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface de Jeu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #2c2f33;
+            color: #ffffff;
+        }
+        .character-interface {
+            display: none;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: #424549;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .progress-bar {
+            background-color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Formulaire de collecte des informations -->
+    <div class="card">
+        <h2 class="text-center">Bienvenue ! Entrez vos informations</h2>
+        <form id="playerForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date de naissance</label>
+                <input type="date" class="form-control" id="dob" required>
+            </div>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Sexe</label>
+                <select class="form-select" id="gender" required>
+                    <option value="Homme">Homme</option>
+                    <option value="Femme">Femme</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="height" class="form-label">Taille (cm)</label>
+                <input type="number" class="form-control" id="height" required>
+            </div>
+            <div class="mb-3">
+                <label for="weight" class="form-label">Poids (kg)</label>
+                <input type="number" class="form-control" id="weight" required>
+            </div>
+            <div class="mb-3">
+                <label for="activity" class="form-label">Niveau d'activité physique</label>
+                <select class="form-select" id="activity" required>
+                    <option value="1.2">Sédentaire</option>
+                    <option value="1.375">Léger</option>
+                    <option value="1.55">Modéré</option>
+                    <option value="1.725">Intense</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Commencer</button>
+        </form>
+    </div>
+
+    <!-- Interface de personnage -->
+    <div class="character-interface mt-5">
+        <h3 class="text-center">Interface de Personnage</h3>
+        <div class="card">
+            <p><i class="fas fa-user"></i> Nom : <span id="displayName"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> Âge : <span id="displayAge"></span></p>
+            <p><i class="fas fa-weight"></i> IMC : <span id="displayBMI"></span></p>
+            <p><i class="fas fa-running"></i> Dépense Énergétique Journalière (TDEE) : <span id="displayTDEE"></span> kcal</p>
+            <p><i class="fas fa-balance-scale"></i> Poids Idéal : <span id="displayIdealWeight"></span> kg</p>
+
+            <!-- Barre d'Espérance de vie restante -->
+            <div class="mb-3">
+                <label for="lifeExpectancy" class="form-label">Espérance de vie restante</label>
+                <div class="progress">
+                    <div class="progress-bar" id="lifeProgress" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateAge(dateOfBirth) {
+        const birthDate = new Date(dateOfBirth);
+        const now = new Date();
+        const ageInMilliseconds = now - birthDate;
+        const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+        const years = Math.floor(ageInYears);
+        const days = Math.floor((ageInYears - years) * 365.25);
+        return `${years} ans et ${days} jours`;
+    }
+
+    function calculateBMI(weight, height) {
+        const heightInMeters = height / 100;
+        return (weight / (heightInMeters * heightInMeters)).toFixed(2);
+    }
+
+    function calculateIdealWeight(height, gender) {
+        if (gender === "Homme") {
+            return (50 + 0.91 * (height - 152.4)).toFixed(2);
+        } else {
+            return (45.5 + 0.91 * (height - 152.4)).toFixed(2);
+        }
+    }
+
+    function calculateTDEE(weight, height, age, gender, activityLevel) {
+        let bmr;
+        if (gender === "Homme") {
+            bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+        } else {
+            bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+        }
+        return (bmr * activityLevel).toFixed(2);
+    }
+
+    $(document).ready(function() {
+        $("#playerForm").submit(function(event) {
+            event.preventDefault();
+
+            // Récupération des données du formulaire
+            const name = $("#name").val();
+            const dob = $("#dob").val();
+            const gender = $("#gender").val();
+            const height = parseFloat($("#height").val());
+            const weight = parseFloat($("#weight").val());
+            const activityLevel = parseFloat($("#activity").val());
+
+            // Calculs
+            const age = calculateAge(dob);
+            const bmi = calculateBMI(weight, height);
+            const idealWeight = calculateIdealWeight(height, gender);
+            const ageInYears = Math.floor((new Date() - new Date(dob)) / (1000 * 60 * 60 * 24 * 365.25));
+            const tdee = calculateTDEE(weight, height, ageInYears, gender, activityLevel);
+
+            // Affichage des données
+            $("#displayName").text(name);
+            $("#displayAge").text(age);
+            $("#displayBMI").text(bmi);
+            $("#displayIdealWeight").text(idealWeight);
+            $("#displayTDEE").text(tdee);
+
+            // Afficher l'interface de personnage et masquer le formulaire
+            $(".character-interface").show();
+            $("#playerForm").closest(".card").hide();
+        });
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

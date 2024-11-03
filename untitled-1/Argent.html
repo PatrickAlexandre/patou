@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Application créée avec Code Copilot GPT !">
+    <title>Patou ARG</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        #imcResult { transition: opacity 0.5s ease; }
+        .success { color: green; opacity: 1; }
+        .error { color: red; opacity: 1; }
+        .hidden-message { opacity: 0; }
+        .progress-bar { background-color: #ddd; border-radius: 10px; overflow: hidden; }
+        .progress-bar-fill { height: 20px; background-color: #4caf50; width: 0%; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Barre de navigation -->
+    <nav class="bg-blue-600 p-4 text-white flex justify-between">
+        <div class="text-lg font-bold">Bienvenue chez Patou !</div>
+        <ul class="flex space-x-4 text-sm">
+            <li><button onclick="showPage('home')" class="hover:underline">🏠 Accueil</button></li>
+            <li><button onclick="showPage('sante')" class="hover:underline">💪 Santé</button></li>
+            <li><button onclick="showPage('travail')" class="hover:underline">🧑‍💼 Travail</button></li>
+            <li><button onclick="showPage('argent')" class="hover:underline">💰 Argent</button></li>
+            <li><button onclick="showPage('connexion')" class="hover:underline">🔐 Connexion</button></li>
+        </ul>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div id="content" class="container mx-auto my-10 px-4 lg:px-0">
+        <section id="home" class="hidden">
+            <h1 class="text-3xl font-bold text-center text-blue-600">Bienvenue <span id="userNameDisplay"></span> !</h1>
+            <p class="text-center mt-4 text-gray-700">Vous avez <span id="userAgeDisplay"></span> ans. Naviguez entre les sections pour explorer des fonctionnalités de bien-être.</p>
+        </section>
+
+        <section id="sante" class="hidden">
+            <h2 class="text-2xl font-bold text-blue-600 mb-4">Santé et Bien-être</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h3 class="text-xl font-semibold mb-2">Calcul de l'IMC</h3>
+                <p id="imcResult" class="mt-4 text-gray-700 hidden-message">Les résultats apparaîtront ici.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Vie restante</h3>
+                <p id="lifeExpectancyResult" class="text-gray-700">Calcul de la vie restante...</p>
+                <div class="progress-bar mt-4"><div id="lifeProgress" class="progress-bar-fill"></div></div>
+            </div>
+        </section>
+
+        <section id="travail" class="hidden">
+            <h2 class="text-2xl font-bold text-blue-600 mb-4">Équilibre Travail et Bien-être</h2>
+            <p class="text-gray-700">Explorez les conseils pour maintenir un bon équilibre entre vie professionnelle et bien-être.</p>
+        </section>
+
+        <section id="argent" class="hidden">
+            <h2 class="text-2xl font-bold text-blue-600 mb-4">Gestion de l'Argent</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md text-center"><h3>Épargne</h3><p id="savingsDisplay">0 €</p></div>
+                <div class="bg-white p-4 rounded-lg shadow-md text-center"><h3>Investissements</h3><p id="investmentsDisplay">0 €</p></div>
+                <div class="bg-white p-4 rounded-lg shadow-md text-center"><h3>Passifs</h3><p id="liabilitiesDisplay">0 €</p></div>
+                <div class="bg-white p-4 rounded-lg shadow-md text-center"><h3>Actifs</h3><p id="assetsDisplay">0 €</p></div>
+            </div>
+            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Désignation</th>
+                        <th class="py-3 px-6 text-center">/ Mois</th>
+                        <th class="py-3 px-6 text-center">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="expensesTable" class="text-gray-700 text-sm font-light">
+                    <!-- Les catégories COICOP seront ajoutées ici -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="connexion" class="hidden">
+            <h2 class="text-2xl font-bold text-blue-600 mb-4">Informations Personnelles</h2>
+            <form id="infoForm" class="bg-white p-6 rounded-lg shadow-md">
+                <label class="block mb-2">Prénom:</label>
+                <input type="text" id="firstName" class="p-2 border rounded w-full mb-4">
+                <label class="block mb-2">Date de naissance:</label>
+                <input type="date" id="birthdate" class="p-2 border rounded w-full mb-4">
+                <label class="block mb-2">Sexe:</label>
+                <select id="gender" class="p-2 border rounded w-full mb-4">
+                    <option value="male">Homme</option>
+                    <option value="female">Femme</option>
+                </select>
+                <label class="block mb-2">Poids (kg):</label>
+                <input type="number" id="weight" class="p-2 border rounded w-full mb-4">
+                <label class="block mb-2">Taille (cm):</label>
+                <input type="number" id="height" class="p-2 border rounded w-full mb-4">
+                <button type="button" onclick="saveUserInfo()" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Enregistrer</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        const COICOP = ["Nourriture", "Boissons", "Tabac", "Logement", "Meubles", "Santé", "Transport", "Communication", "Loisirs", "Éducation", "Restaurants", "Biens divers"];
+
+        function showPage(pageId) {
+            document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
+            document.getElementById(pageId).classList.remove("hidden");
+            if (pageId === 'sante') { calculateIMC(); calculateLifeExpectancy(); }
+            if (pageId === 'home') displayUserInfo();
+            if (pageId === 'argent') populateExpensesTable();
+        }
+
+        function saveUserInfo() {
+            localStorage.setItem("firstName", document.getElementById("firstName").value);
+            localStorage.setItem("birthdate", document.getElementById("birthdate").value);
+            localStorage.setItem("gender", document.getElementById("gender").value);
+            localStorage.setItem("weight", document.getElementById("weight").value);
+            localStorage.setItem("height", document.getElementById("height").value);
+            alert("Informations enregistrées !");
+            calculateIMC(); calculateLifeExpectancy();
+        }
+
+        function loadUserInfo() {
+            document.getElementById("firstName").value = localStorage.getItem("firstName") || "";
+            document.getElementById("birthdate").value = localStorage.getItem("birthdate") || "";
+            document.getElementById("gender").value = localStorage.getItem("gender") || "male";
+            document.getElementById("weight").value = localStorage.getItem("weight") || "";
+            document.getElementById("height").value = localStorage.getItem("height") || "";
+        }
+
+        function calculateIMC() {
+            const imcResult = document.getElementById("imcResult"), weight = parseFloat(localStorage.getItem("weight")), height = parseFloat(localStorage.getItem("height"));
+            imcResult.classList.add("hidden-message");
+            if (!weight || !height) { imcResult.innerHTML = `<i class="fas fa-exclamation-circle"></i> Veuillez saisir votre poids et votre taille dans la section Connexion.`; imcResult.classList.remove("success"); imcResult.classList.add("error"); imcResult.classList.remove("hidden-message"); return; }
+            const heightInMeters = height / 100, imc = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+            let interpretation = (imc < 18.5) ? "Poids insuffisant" : (imc >= 18.5 && imc < 24.9) ? "Poids normal" : (imc >= 25 && imc < 29.9) ? "Surpoids" : "Obésité";
+            imcResult.innerHTML = `<i class="fas fa-check-circle"></i> Votre IMC est de ${imc} (${interpretation}).`; imcResult.classList.remove("error"); imcResult.classList.add("success"); imcResult.classList.remove("hidden-message");
+        }
+
+        function displayUserInfo() {
+            const firstName = localStorage.getItem("firstName") || "Utilisateur";
+            const birthdate = new Date(localStorage.getItem("birthdate"));
+            const age = birthdate ? new Date().getFullYear() - birthdate.getFullYear() : "N/A";
+            document.getElementById("userNameDisplay").innerText = firstName;
+            document.getElementById("userAgeDisplay").innerText = age;
+        }
+
+        function calculateLifeExpectancy() {
+            const gender = localStorage.getItem("gender") || "male", birthdate = new Date(localStorage.getItem("birthdate")), currentAge = new Date().getFullYear() - birthdate.getFullYear();
+            const lifeExpectancy = gender === "male" ? 79 : 84; // Moyenne mondiale approximative
+            const remainingLife = lifeExpectancy - currentAge;
+            const remainingDays = Math.max(remainingLife * 365, 0);
+            document.getElementById("lifeExpectancyResult").innerText = `Vous avez encore environ ${remainingDays} jours à vivre.`;
+            document.getElementById("lifeProgress").style.width = `${Math.min((currentAge / lifeExpectancy) * 100, 100)}%`;
+        }
+
+        function populateExpensesTable() {
+            const expensesTable = document.getElementById("expensesTable");
+            expensesTable.innerHTML = "";
+            COICOP.forEach(category => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td class="py-3 px-6 text-left">${category}</td>
+                                 <td class="py-3 px-6 text-center"><input type="number" class="w-full text-center" /></td>
+                                 <td class="py-3 px-6 text-center">0 €</td>`;
+                expensesTable.appendChild(row);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => { showPage("home"); loadUserInfo(); });
+    </script>
+</body>
+</html>
