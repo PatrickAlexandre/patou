@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculatrice Finance & Santé</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- jQuery, Lodash, Moment.js, Health.js, Healthcalc -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="path/to/health.js"></script>
+    <script src="path/to/healthcalc.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 p-6">
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">Calculatrice Finance & Santé</h1>
+        
+        <!-- Formulaire -->
+        <form id="calculator-form" class="bg-white p-6 rounded-lg shadow-lg space-y-4">
+            <h2 class="text-xl font-bold text-center">Informations Personnelles</h2>
+
+            <!-- Champ de saisie -->
+            <div class="space-y-4">
+                <div>
+                    <label for="firstName" class="block font-medium">Prénom :</label>
+                    <input type="text" id="firstName" class="w-full border border-gray-300 p-2 rounded-lg">
+                </div>
+                <div>
+                    <label for="lastName" class="block font-medium">Nom :</label>
+                    <input type="text" id="lastName" class="w-full border border-gray-300 p-2 rounded-lg">
+                </div>
+                <div>
+                    <label for="birthDate" class="block font-medium">Date de naissance :</label>
+                    <input type="date" id="birthDate" class="w-full border border-gray-300 p-2 rounded-lg">
+                </div>
+                <div>
+                    <label for="height" class="block font-medium">Taille (cm) :</label>
+                    <input type="number" id="height" class="w-full border border-gray-300 p-2 rounded-lg">
+                </div>
+                <div>
+                    <label for="weight" class="block font-medium">Poids (kg) :</label>
+                    <input type="number" id="weight" class="w-full border border-gray-300 p-2 rounded-lg">
+                </div>
+                <div>
+                    <label for="activityLevel" class="block font-medium">Niveau d'activité physique (NAP) :</label>
+                    <input type="range" id="activityLevel" min="1" max="2.5" step="0.1" value="1.2" class="w-full">
+                </div>
+                <div>
+                    <label for="monthlyIncome" class="block font-medium">Revenus mensuels (€) :</label>
+                    <input type="number" id="monthlyIncome" class="w-full border border-gray-300 p-2 rounded-lg">
+                </div>
+                <div>
+                    <label for="monthlyExpenses" class="block font-medium">Dépenses mensuelles (€) :</label>
+                    <input type="number" id="monthlyExpenses" class="w-full border border-gray-300 p-2 rounded-lg">
+                    <button type="button" id="import-csv" class="mt-2 text-blue-500 underline">Importer CSV</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Résultats -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Section Finances -->
+            <div id="finance-results" class="bg-blue-900 text-white p-6 rounded-lg">
+                <h2 class="text-xl font-bold mb-4"><i class="fas fa-euro-sign"></i> Finance</h2>
+                <p><span class="font-bold">Pourcentage des dépenses/revenus :</span> <span id="expensePercentage"></span> %</p>
+                <p><span class="font-bold">Dépenses mensuelles restantes :</span> <span id="remainingIncome"></span> €</p>
+                <p><span class="font-bold">Épargne annuelle potentielle :</span> <span id="annualSavings"></span> €</p>
+            </div>
+            
+            <!-- Section Santé -->
+            <div id="health-results" class="bg-teal-600 text-white p-6 rounded-lg">
+                <h2 class="text-xl font-bold mb-4"><i class="fas fa-heartbeat"></i> Santé</h2>
+                <p><span class="font-bold">Âge :</span> <span id="age"></span> ans</p>
+                <p><span class="font-bold">IMC :</span> <span id="bmi"></span></p>
+                <p><span class="font-bold">Poids idéal :</span> <span id="idealWeight"></span> kg</p>
+                <p><span class="font-bold">Besoins caloriques journaliers :</span> <span id="dailyCalories"></span> kcal</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateResults() {
+            // Collecte des données
+            const birthDate = moment($('#birthDate').val());
+            const height = parseFloat($('#height').val());
+            const weight = parseFloat($('#weight').val());
+            const nap = parseFloat($('#activityLevel').val());
+            const monthlyIncome = parseFloat($('#monthlyIncome').val());
+            const monthlyExpenses = parseFloat($('#monthlyExpenses').val());
+
+            // Calcul âge
+            const age = moment().diff(birthDate, 'years');
+            $('#age').text(age);
+
+            // Calcul IMC
+            const bmi = (weight / Math.pow(height / 100, 2)).toFixed(2);
+            $('#bmi').text(bmi);
+
+            // Calcul poids idéal (Formule de Devine)
+            const idealWeight = (height - 100 + age / 10) * 0.9;
+            $('#idealWeight').text(idealWeight.toFixed(2));
+
+            // Calcul BMR (Formule de Harris-Benedict pour les hommes, changez la formule pour les femmes si besoin)
+            const bmr = (88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)).toFixed(2);
+            
+            // Besoins caloriques journaliers
+            const dailyCalories = (bmr * nap).toFixed(2);
+            $('#dailyCalories').text(dailyCalories);
+
+            // Calcul finance
+            if (monthlyIncome && monthlyExpenses) {
+                const expensePercentage = ((monthlyExpenses / monthlyIncome) * 100).toFixed(2);
+                const remainingIncome = (monthlyIncome - monthlyExpenses).toFixed(2);
+                const annualSavings = (remainingIncome * 12).toFixed(2);
+                
+                $('#expensePercentage').text(expensePercentage);
+                $('#remainingIncome').text(remainingIncome);
+                $('#annualSavings').text(annualSavings);
+            }
+        }
+
+        // Calcul en temps réel
+        $('#calculator-form input, #calculator-form select').on('input change', calculateResults);
+
+        // Import CSV (fonctionnalité à ajouter)
+        $('#import-csv').click(function() {
+            alert("Fonction d'import CSV à implémenter");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Santé</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .result-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar-inner {
+            height: 20px;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 1s;
+        }
+        .result {
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculateur de Santé</h2>
+    <form id="healthForm">
+        <label>Date de Naissance : </label>
+        <input type="date" id="dob" required><br><br>
+
+        <label>Taille (cm) : </label>
+        <input type="number" id="height" required><br><br>
+
+        <label>Poids (kg) : </label>
+        <input type="number" id="weight" required><br><br>
+
+        <label>Niveau d'Activité (NAP) : </label>
+        <input type="range" id="activityLevel" min="1" max="2.5" step="0.1" value="1.2">
+        <span id="activityLabel">1.2</span><br><br>
+
+        <button type="button" id="calculateButton">Calculer</button>
+    </form>
+
+    <div class="result" id="ageResult"><i class="fas fa-birthday-cake result-icon"></i> Âge : <span id="age"></span></div>
+    <div class="result" id="bmrResult"><i class="fas fa-fire result-icon"></i> BMR : <span id="bmr"></span> kcal</div>
+    <div class="result" id="tdeeResult"><i class="fas fa-bolt result-icon"></i> TDEE : <span id="tdee"></span> kcal</div>
+    <div class="result" id="bmiResult"><i class="fas fa-weight result-icon"></i> IMC : <span id="bmi"></span></div>
+
+    <div class="progress-bar">
+        <div class="progress-bar-inner" id="lifeProgress"></div>
+    </div>
+    <div class="result" id="lifeExpectancy"><i class="fas fa-hourglass-half result-icon"></i> Années restantes : <span id="yearsRemaining"></span></div>
+</div>
+
+<script>
+$(document).ready(function() {
+    const lifeExpectancy = 82;  // Espérance de vie moyenne
+
+    $("#activityLevel").on("input", function() {
+        $("#activityLabel").text($(this).val());
+    });
+
+    $("#calculateButton").click(function() {
+        const dob = $("#dob").val();
+        const height = parseFloat($("#height").val());
+        const weight = parseFloat($("#weight").val());
+        const activityLevel = parseFloat($("#activityLevel").val());
+
+        if (!dob || !height || !weight) {
+            alert("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        // Calcul de l'âge
+        const age = moment().diff(moment(dob), 'years');
+        const nextBirthday = moment(dob).add(age + 1, 'years');
+        const daysToNextBirthday = nextBirthday.diff(moment(), 'days');
+        $("#age").text(`${age} ans (${daysToNextBirthday} jours avant votre prochain anniversaire)`);
+
+        // Calcul du BMR (utilisation de la formule de Harris-Benedict)
+        const bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+        $("#bmr").text(Math.round(bmr));
+
+        // Calcul du TDEE
+        const tdee = bmr * activityLevel;
+        $("#tdee").text(Math.round(tdee));
+
+        // Calcul de l'IMC
+        const heightM = height / 100;
+        const bmi = weight / (heightM * heightM);
+        $("#bmi").text(bmi.toFixed(1));
+
+        // Calcul des années restantes et barre de progression de vie
+        const yearsRemaining = lifeExpectancy - age;
+        const lifeProgressPercentage = (age / lifeExpectancy) * 100;
+        $("#yearsRemaining").text(yearsRemaining > 0 ? yearsRemaining : "Vous avez dépassé l'espérance de vie !");
+        $("#lifeProgress").css("width", lifeProgressPercentage + "%");
+    });
+});
+</script>
+
+</body>
+</html>

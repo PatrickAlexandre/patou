@@ -1,0 +1,56 @@
+Je souhaite créer un site web simple qui sert de calculatrice pour des indicateurs financiers et de santé. Voici les spécifications :
+
+
+
+Formulaire de saisie : Le formulaire doit inclure les champs suivants pour collecter les informations personnelles de l'utilisateur :
+
+Nom (texte)
+Prénom (texte)
+Date de naissance (date)
+Taille en cm (numérique)
+Poids en kg (numérique)
+Niveau d'activité physique (NAP) (curseur avec des valeurs de 1 à 2,5 par pas de 0,1)
+Revenus mensuels en euros (numérique)
+Dépenses mensuelles en euros (numérique) avec bouton Importer CSV
+
+
+
+Calculs automatiques : Utiliser JavaScript pour calculer en temps réel les indicateurs suivants en fonction des données saisies :
+
+Âge : Calculé à partir de la date de naissance.
+Indice de Masse Corporelle (IMC) : poids / (taille / 100)^2.
+Poids idéal selon la formule de Devine 
+Besoins caloriques journaliers : BMR * NAP, avec le BMR calculé.
+BMR : Métabolisme de Base au Repos.
+Formule de Harris-Benedict
+Équation de Mifflin St Jeor
+Pourcentage des dépenses/revenus : (dépenses / revenus) * 100.
+Dépenses mensuelles restantes : revenus - dépenses.
+Épargne annuelle potentielle : (revenus - dépenses) * 12.
+
+
+
+Affichage des résultats : Diviser la section des résultats en deux parties, avec les éléments financiers à gauche et les éléments de santé à droite :
+
+Finances (à gauche) :
+Pourcentage des dépenses/revenus (en gras)
+Dépenses mensuelles restantes
+Épargne annuelle potentielle
+
+Santé (à droite) :
+Âge (en années)
+IMC
+Poids idéal
+Besoins caloriques journaliers
+
+
+
+Style des résultats : Afficher les résultats en gras avec des icônes Font Awesome, et utiliser Tailwind CSS pour styliser les sections et les icônes.
+
+
+
+Bibliothèques à utiliser :
+
+CSS : Utiliser Tailwind CSS pour le style et Font Awesome pour les icônes.
+JavaScript : Utiliser jQuery et Lodash pour la manipulation du DOM, Moment.js pour les calculs liés aux dates, Health.js et Healthcalc pour la Santé.
+Rédige le code HTML complet dans un seul bloc, en incluant le formulaire, les sections de résultats et les calculs JavaScript nécessaires pour une mise à jour en temps réel des résultats. Utilise des couleurs distinctes pour chaque section de résultats (par exemple, bleu Navy Seals pour "Argent" et vert d'eau pour "Santé") avec des icônes pour chaque indicateur.

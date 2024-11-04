@@ -1,125 +1,122 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface Gaming - Thèmes de Vie</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculatrice Santé et Finance</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-gray-100">
 
-<div class="container mx-auto p-5">
-    <h1 class="text-4xl font-bold text-center mb-8">Thèmes de Vie - Interface Gaming</h1>
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+  <h1 class="text-2xl font-bold text-center mb-5">Calculatrice Santé et Finance</h1>
+  
+  <!-- Formulaire -->
+  <form id="calculatrice-form" class="space-y-4">
+    <div class="flex flex-wrap gap-4">
+      <div class="flex-1">
+        <label class="block font-semibold">Nom <span class="text-red-500">*</span></label>
+        <input type="text" id="nom" class="w-full border-gray-300 rounded-md shadow-sm" required>
+      </div>
+      <div class="flex-1">
+        <label class="block font-semibold">Prénom <span class="text-red-500">*</span></label>
+        <input type="text" id="prenom" class="w-full border-gray-300 rounded-md shadow-sm" required>
+      </div>
+    </div>
 
-    <!-- Formulaire de saisie de données -->
-    <form id="lifeForm" class="space-y-5 bg-gray-700 p-5 rounded-lg">
-        <h2 class="text-2xl font-semibold">Entrer vos informations</h2>
-        
-        <!-- Exemple de champs de formulaire -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label for="age" class="block text-sm font-medium">Âge</label>
-                <input type="number" id="age" class="mt-1 block w-full px-3 py-2 bg-gray-900 text-white rounded-md" placeholder="Votre âge en années">
-            </div>
-            <div>
-                <label for="weight" class="block text-sm font-medium">Poids (kg)</label>
-                <input type="number" id="weight" class="mt-1 block w-full px-3 py-2 bg-gray-900 text-white rounded-md" placeholder="Votre poids en kg">
-            </div>
-        </div>
+    <div class="flex flex-wrap gap-4">
+      <div class="flex-1">
+        <label class="block font-semibold">Date de naissance 🎂</label>
+        <input type="date" id="date_naissance" class="w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div class="flex-1">
+        <label class="block font-semibold">Taille (cm) 📏</label>
+        <input type="number" id="taille" min="50" max="250" class="w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div class="flex-1">
+        <label class="block font-semibold">Poids (kg) ⚖️</label>
+        <input type="number" id="poids" min="10" max="300" class="w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+    </div>
 
-        <button type="button" onclick="calculateResults()" class="mt-5 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md">Calculer</button>
-    </form>
+    <div class="flex flex-wrap gap-4">
+      <div class="flex-1">
+        <label class="block font-semibold">Niveau d'activité physique (NAP) 🏃</label>
+        <input type="range" id="nap" min="1" max="2.5" step="0.1" class="w-full">
+      </div>
+      <div class="flex-1">
+        <label class="block font-semibold">Revenus (€) 💶</label>
+        <input type="number" id="revenus" min="0" class="w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div class="flex-1">
+        <label class="block font-semibold">Dépenses (€) 💸</label>
+        <input type="number" id="depenses" min="0" class="w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+    </div>
+  </form>
 
-    <!-- Résultats calculés -->
-    <div id="results" class="mt-10 space-y-10"></div>
+  <!-- Section Résultats -->
+  <div class="mt-6 flex justify-between space-x-4">
+    <!-- Résultats Financiers -->
+    <div class="flex-1 bg-blue-100 p-4 rounded-lg">
+      <h2 class="text-xl font-bold text-blue-700">Argent <i class="fas fa-euro-sign"></i></h2>
+      <p><strong>Pourcentage Dépenses/Revenus (%) 💸 :</strong> <span id="pourcentage_depenses"></span></p>
+      <p><strong>Dépenses Restantes (€) 🏦 :</strong> <span id="depenses_restant"></span></p>
+      <p><strong>Épargne Annuelle (€) 💰 :</strong> <span id="epargne_annuelle"></span></p>
+    </div>
+
+    <!-- Résultats Santé -->
+    <div class="flex-1 bg-green-100 p-4 rounded-lg">
+      <h2 class="text-xl font-bold text-green-700">Santé <i class="fas fa-heartbeat"></i></h2>
+      <p><strong>Âge 🧑‍🎓 :</strong> <span id="age"></span></p>
+      <p><strong>IMC 🏋️‍♂️ :</strong> <span id="imc"></span></p>
+      <p><strong>Poids Idéal 🏆 :</strong> <span id="poids_ideal"></span></p>
+      <p><strong>Besoins Caloriques Journaliers 🍏 :</strong> <span id="calories"></span></p>
+    </div>
+  </div>
 </div>
 
 <script>
-// Fonction principale pour calculer les résultats
-function calculateResults() {
-    // Récupération des valeurs du formulaire
-    const age = parseInt(document.getElementById("age").value) || 0;
-    const weight = parseFloat(document.getElementById("weight").value) || 0;
+  $(document).ready(function () {
+    $("#calculatrice-form input").on("input", function () {
+      const dateNaissance = $("#date_naissance").val();
+      const taille = parseFloat($("#taille").val());
+      const poids = parseFloat($("#poids").val());
+      const nap = parseFloat($("#nap").val());
+      const revenus = parseFloat($("#revenus").val());
+      const depenses = parseFloat($("#depenses").val());
 
-    // Initialisation des résultats pour chaque thème
-    const results = {
-        health: [
-            { label: "Indice de Masse Corporelle (IMC)", value: (weight / Math.pow(1.75, 2)).toFixed(2), icon: "fas fa-weight" },
-            { label: "TDEE (Dépense Énergétique Quotidienne)", value: (weight * 24 * 1.55).toFixed(1) + " kcal", icon: "fas fa-fire" },
-            { label: "Calories de Maintien", value: (weight * 24).toFixed(1) + " kcal", icon: "fas fa-burn" },
-            { label: "Objectif Calorique (Perte de Poids)", value: ((weight * 24 * 0.8)).toFixed(1) + " kcal", icon: "fas fa-tachometer-alt" },
-            { label: "Poids Idéal", value: (22 * Math.pow(1.75, 2)).toFixed(1) + " kg", icon: "fas fa-heart" }
-        ],
-        finances: [
-            { label: "Revenu Annuel", value: (3000 * 12).toFixed(2) + " €", icon: "fas fa-wallet" },
-            { label: "Épargne Mensuelle Conseillée", value: (3000 * 0.2).toFixed(2) + " €", icon: "fas fa-piggy-bank" },
-            { label: "Revenu Annuel Après Impôts (30%)", value: (3000 * 12 * 0.7).toFixed(2) + " €", icon: "fas fa-file-invoice-dollar" },
-            { label: "Fonds d'Urgence (6 mois)", value: (3000 * 6).toFixed(2) + " €", icon: "fas fa-shield-alt" },
-            { label: "Montant de Retraite à 65 ans", value: ((3000 * 12) * 25).toFixed(2) + " €", icon: "fas fa-umbrella" }
-        ],
-        relations: [
-            { label: "Temps Moyen par Jour pour les Relations", value: (60 * 1.5).toFixed(1) + " minutes", icon: "fas fa-users" },
-            { label: "Rencontres Mensuelles Moyennes", value: (4).toFixed(0) + " fois", icon: "fas fa-calendar" },
-            { label: "Heures Passées avec Amis/An", value: (2 * 52).toFixed(0) + " heures", icon: "fas fa-clock" },
-            { label: "Taux d'Engagement Social", value: "Élevé", icon: "fas fa-handshake" },
-            { label: "Temps en Ligne / Jour", value: (2.5).toFixed(1) + " heures", icon: "fas fa-laptop" }
-        ],
-        education: [
-            { label: "Heures d'Étude Suggérées / Jour", value: (2).toFixed(1) + " heures", icon: "fas fa-book" },
-            { label: "Total d'Heures d'Étude par Semaine", value: (2 * 7).toFixed(1) + " heures", icon: "fas fa-clock" },
-            { label: "Niveau Actuel de Compétence", value: "Intermédiaire", icon: "fas fa-level-up-alt" },
-            { label: "Cours Suivis cette Année", value: (5).toFixed(0) + " cours", icon: "fas fa-graduation-cap" },
-            { label: "Temps Requis pour Maîtriser une Compétence", value: (10000 / (2 * 7)).toFixed(1) + " semaines", icon: "fas fa-bullseye" }
-        ],
-        wellbeing: [
-            { label: "Heures de Sommeil Recommandées / Nuit", value: (8).toFixed(1) + " heures", icon: "fas fa-bed" },
-            { label: "Durée Moyenne des Loisirs / Jour", value: (2).toFixed(1) + " heures", icon: "fas fa-gamepad" },
-            { label: "Temps de Méditation Suggéré / Jour", value: (15).toFixed(1) + " minutes", icon: "fas fa-spa" },
-            { label: "Temps Passé en Plein Air / Semaine", value: (3 * 7).toFixed(1) + " heures", icon: "fas fa-tree" },
-            { label: "Objectif de Bien-Être Hebdomadaire", value: "Atteint", icon: "fas fa-smile" }
-        ]
-    };
+      // Calcul de l'âge
+      let age = dateNaissance ? moment().diff(dateNaissance, 'years') : '';
+      $("#age").text(age);
 
-    displayResults(results);
-}
+      // Calcul de l'IMC
+      let imc = (poids && taille) ? (poids / ((taille / 100) ** 2)).toFixed(2) : '';
+      $("#imc").text(imc);
 
-// Fonction pour afficher les résultats dans le DOM
-function displayResults(results) {
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = ""; // Réinitialiser les résultats précédents
+      // Calcul du poids idéal
+      let poidsIdeal = taille ? (50 + 0.91 * (taille - 152)).toFixed(2) : '';
+      $("#poids_ideal").text(poidsIdeal);
 
-    // Générer des sections de résultats pour chaque thème
-    for (const [theme, calculations] of Object.entries(results)) {
-        const section = document.createElement("div");
-        section.className = "bg-gray-700 p-5 rounded-lg";
-        
-        const title = document.createElement("h3");
-        title.className = "text-2xl font-semibold mb-4";
-        title.textContent = `Thème : ${theme.charAt(0).toUpperCase() + theme.slice(1)}`;
-        section.appendChild(title);
+      // Calcul du BMR
+      let bmr = poids ? (10 * poids + 6.25 * taille - 5 * age + 5) : '';
+      let calories = (bmr && nap) ? (bmr * nap).toFixed(0) : '';
+      $("#calories").text(calories);
 
-        calculations.forEach(calc => {
-            const resultItem = document.createElement("div");
-            resultItem.className = "flex items-center mb-2";
+      // Calcul financier
+      let pourcentageDepenses = (revenus && depenses) ? ((depenses / revenus) * 100).toFixed(2) + "%" : '';
+      $("#pourcentage_depenses").text(pourcentageDepenses);
 
-            const icon = document.createElement("i");
-            icon.className = `${calc.icon} text-yellow-500 mr-2`;
-            resultItem.appendChild(icon);
+      let depensesRestant = (revenus && depenses) ? (revenus - depenses).toFixed(2) : '';
+      $("#depenses_restant").text(depensesRestant);
 
-            const resultText = document.createElement("span");
-            resultText.className = "text-lg";
-            resultText.innerHTML = `<strong>${calc.label}:</strong> ${calc.value}`;
-            resultItem.appendChild(resultText);
-
-            section.appendChild(resultItem);
-        });
-
-        resultsDiv.appendChild(section);
-    }
-}
+      let epargneAnnuelle = (revenus && depenses) ? ((revenus - depenses) * 12).toFixed(2) : '';
+      $("#epargne_annuelle").text(epargneAnnuelle);
+    });
+  });
 </script>
 
 </body>
