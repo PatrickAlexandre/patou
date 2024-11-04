@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculateur Financier et Assistant AI</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="container my-5">
+    <h1 class="text-center text-4xl font-bold mb-4">Calculateur Financier et Assistant AI</h1>
+    
+    <!-- Formulaire de saisie des données financières -->
+    <form id="financeForm" class="bg-white p-5 rounded shadow-lg mb-5">
+      <h2 class="text-2xl font-semibold mb-4"><i class="fas fa-user"></i> Informations Financières</h2>
+      
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="income">Revenu Mensuel (€)</label>
+          <input type="number" class="form-control" id="income" placeholder="Entrez votre revenu" min="0" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="expenses">Dépenses Mensuelles (€)</label>
+          <input type="number" class="form-control" id="expenses" placeholder="Entrez vos dépenses" min="0" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="savingsGoal">Objectif d'Épargne (€)</label>
+          <input type="number" class="form-control" id="savingsGoal" placeholder="Entrez votre objectif d'épargne" min="0" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="investmentRate">Taux d'Investissement (%)</label>
+          <input type="number" class="form-control" id="investmentRate" placeholder="Ex: 5" min="0" max="100" required>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary mt-3" onclick="calculateFinance()">Calculer</button>
+    </form>
+
+    <!-- Section des résultats -->
+    <div id="financeResults" class="container bg-light p-4 rounded shadow-lg my-4 hidden">
+      <h2 class="text-primary font-weight-bold mb-4 text-center"><i class="fas fa-chart-line"></i> Résultats Financiers</h2>
+
+      <div class="row">
+        <!-- Informations de base -->
+        <div class="col-md-6 mb-3">
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">
+                <i class="fas fa-piggy-bank text-primary"></i> 
+                <strong>Épargne Potentielle Mensuelle :</strong> <span id="potentialSavings"></span> €
+              </p>
+              <p class="card-text">
+                <i class="fas fa-calendar-alt text-primary"></i> 
+                <strong>Mois jusqu'à l'objectif :</strong> <span id="monthsToGoal"></span>
+              </p>
+              <p class="card-text">
+                <i class="fas fa-chart-pie text-success"></i> 
+                <strong>Pourcentage Épargne/Investissement :</strong> <span id="investmentPercentage"></span> %
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations détaillées -->
+        <div class="col-md-6 mb-3">
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">
+                <i class="fas fa-coins text-warning"></i> 
+                <strong>Revenu Mensuel :</strong> <span id="monthlyIncome"></span> €
+              </p>
+              <p class="card-text">
+                <i class="fas fa-money-bill-wave text-danger"></i> 
+                <strong>Dépenses Mensuelles :</strong> <span id="monthlyExpenses"></span> €
+              </p>
+              <p class="card-text">
+                <i class="fas fa-bullseye text-info"></i> 
+                <strong>Objectif d'Épargne :</strong> <span id="goalAmount"></span> €
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+
+<script>
+  function calculateFinance() {
+    // Validation et récupération des valeurs
+    const income = parseFloat($('#income').val());
+    const expenses = parseFloat($('#expenses').val());
+    const savingsGoal = parseFloat($('#savingsGoal').val());
+    const investmentRate = parseFloat($('#investmentRate').val());
+
+    if (isNaN(income) || isNaN(expenses) || isNaN(savingsGoal) || isNaN(investmentRate)) {
+      alert('Veuillez entrer des valeurs valides.');
+      return;
+    }
+
+    // Calcul de l'épargne potentielle mensuelle
+    const potentialSavings = income - expenses;
+
+    // Calcul des mois nécessaires pour atteindre l'objectif d'épargne
+    const monthsToGoal = savingsGoal > 0 && potentialSavings > 0 
+      ? Math.ceil(savingsGoal / potentialSavings) 
+      : "Objectif non atteignable avec les dépenses actuelles";
+
+    // Calcul du pourcentage épargne/investissement
+    const investmentPercentage = ((potentialSavings * (investmentRate / 100)).toFixed(2));
+
+    // Affichage des résultats
+    $('#potentialSavings').text(potentialSavings.toFixed(2));
+    $('#monthsToGoal').text(monthsToGoal);
+    $('#investmentPercentage').text(investmentPercentage);
+    $('#monthlyIncome').text(income.toFixed(2));
+    $('#monthlyExpenses').text(expenses.toFixed(2));
+    $('#goalAmount').text(savingsGoal.toFixed(2));
+
+    $('#financeResults').removeClass('hidden').hide().fadeIn();
+    $('#financeForm').hide();
+  }
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
