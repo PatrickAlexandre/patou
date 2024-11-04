@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Exploration d'Orgrimmar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #map {
+            margin: 20px auto;
+            padding: 20px;
+            width: 400px;
+            height: 400px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            background-color: #333;
+        }
+        .npc {
+            background-color: #f90;
+            color: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        #info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #666;
+            width: 400px;
+            background-color: #222;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exploration d'Orgrimmar</h1>
+    <div id="map">
+        <div class="npc" id="bank">Banque</div>
+        <div class="npc" id="coach">Coach Sportif</div>
+        <div class="npc" id="diet">Diététicien</div>
+        <div class="npc" id="delivery">Livraison à Domicile</div>
+        <div class="npc" id="auction">Hôtel des Ventes</div>
+        <div class="npc" id="skills">Compétences</div>
+        <div class="npc" id="inventory">Inventaire</div>
+    </div>
+    <div id="info">
+        <h2>Informations</h2>
+        <p id="info-text">Cliquez sur un PNJ pour obtenir des informations.</p>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const infoText = {
+                bank: "Voici les informations de votre banque : Solde, historique des transactions.",
+                coach: "Rencontrez votre coach sportif : Suivi d'entraînement, objectifs de fitness.",
+                diet: "Rencontrez votre diététicien : Plans de repas, conseils nutritionnels.",
+                delivery: "Options de livraison à domicile : Commandes passées, options d'abonnement.",
+                auction: "Hôtel des ventes : Objets disponibles, statut des enchères.",
+                skills: "Vos compétences : Compétences actuelles, niveau de maîtrise.",
+                inventory: "Votre inventaire : Objets en possession, statut des équipements."
+            };
+
+            $(".npc").click(function () {
+                const npcId = $(this).attr("id");
+                $("#info-text").text(infoText[npcId]);
+            });
+        });
+    </script>
+</body>
+</html>
