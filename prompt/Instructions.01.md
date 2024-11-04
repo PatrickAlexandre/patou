@@ -1,7 +1,7 @@
 
 #  <form> 📋 Les <input> <type>
 
-Les champs de saisie suivants permettent à l'utilisateur de renseigner ses informations personnelles nécessaires pour les calculs de santé et de finances. Les valeurs minimales et maximales sont basées sur les records mondiaux actuels, et les valeurs par défaut correspondent aux moyennes pour chaque champ.
+Les champs de saisie suivants permettent à l'utilisateur de renseigner ses informations personnelles nécessaires pour les calculs de santé et de finances. Les valeurs minimales et maximales sont basées sur les records mondiaux actuels, et les valeurs actuelles correspondent aux moyennes pour chaque champ.
 
 | Type                    | name             | Icone   |
 |-------------------------|------------------|---------|

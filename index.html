@@ -1,208 +1,122 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- 🌐 SEO Meta Tags -->  
   <meta charset="UTF-8">
+  <meta name="description" content="Calculatrice JavaScript">
+  <meta name="keywords" content="Santé, Finance, Temps, Productivité, Espace">
+  <meta name="author" content="Patrick Alexandre Assis">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculateur de Vie</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <style>
-    /* Styles généraux */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #141e30, #243b55);
-      color: #ffffff;
-    }
-    .container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2em;
-      border-radius: 15px;
-      width: 400px;
-      text-align: center;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    }
-    h1 {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .form-columns {
-      display: flex;
-      justify-content: space-between;
-    }
-    .column {
-      width: 48%;
-    }
-    .form-group {
-      margin: 1em 0;
-      position: relative;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 0.5em;
-      margin-top: 0.5em;
-      border: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      font-size: 1em;
-      text-align: center;
-    }
-    .form-group input::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-    }
-    .error {
-      color: #ff6b6b;
-      font-size: 0.8em;
-      position: absolute;
-      bottom: -1.2em;
-      left: 0;
-    }
-    .results {
-      margin-top: 2em;
-      text-align: left;
-    }
-    .result-item {
-      display: flex;
-      justify-content: space-between;
-      margin: 0.5em 0;
-      font-size: 1em;
-    }
-    .result-item i {
-      color: #00d4ff;
-      margin-right: 0.5em;
-    }
-    .progress-bar {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 1em;
-    }
-    .progress {
-      height: 8px;
-      background: #00d4ff;
-      width: 0;
-      transition: width 0.5s ease-in-out;
-    }
-  </style>
+  <title>Calculatrice Santé & Finances</title>
+
+  <!-- 🚀 Bibliothèques JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+  <!-- 🌈 Styles UI & UX -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+  
 </head>
-<body>
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-  <div class="container">
-    <h1>Calculateur de Vie</h1>
-    
-    <div class="form-columns">
-      <!-- Colonne pour les informations définitives -->
-      <div class="column">
-        <div class="form-group">
-          <label>Date de Naissance:</label>
-          <input type="date" id="birthDate" placeholder="YYYY-MM-DD">
-        </div>
-        <div class="form-group">
-          <label>Taille (cm):</label>
-          <input type="number" id="height" placeholder="Ex: 170">
-          <div class="error" id="heightError"></div>
-        </div>
+  <!-- Input -->
+  <div id="signupScreen" class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Création de Compte</h2>
+    <form id="signupForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Informations Définitives -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Constantes</h3>
+        <label for="nom" class="block">
+          <span class="text-gray-700">Nom</span>
+          <input type="text" id="nom" name="nom" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="prenom" class="block mt-4">
+          <span class="text-gray-700">Prénom</span>
+          <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="date_naissance" class="block mt-4">
+          <span class="text-gray-700">Date de Naissance</span>
+          <input type="date" id="date_naissance" name="date_naissance" required min="1900-01-01" max="2024-11-04" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="taille" class="block mt-4">
+          <span class="text-gray-700">Taille (cm)</span>
+          <input type="number" id="taille" name="taille" required min="50" max="250" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>        
       </div>
 
-      <!-- Colonne pour les informations variables -->
-      <div class="column">
-        <div class="form-group">
-          <label>Poids (kg):</label>
-          <input type="number" id="weight" placeholder="Ex: 70">
-          <div class="error" id="weightError"></div>
-        </div>
-        <div class="form-group">
-          <label>Niveau d'activité:</label>
-          <input type="range" id="activityLevel" min="1" max="5" step="1">
-        </div>
+      <!-- Informations qui changent avec le temps -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Variables</h3>
+        <label for="poids" class="block mt-4">
+          <span class="text-gray-700">Poids (kg)</span>
+          <input type="number" id="poids" name="poids" required min="30" max="200" step="0.1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="revenus" class="block mt-4">
+          <span class="text-gray-700">Revenus Mensuels (€)</span>
+          <input type="number" id="revenus" name="revenus" required min="0" step="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="depenses" class="block mt-4">
+          <span class="text-gray-700">Dépenses Mensuelles (€)</span>
+          <input type="number" id="depenses" name="depenses" required min="0" step="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
       </div>
-    </div>
-
-    <div class="results">
-      <div class="result-item"><i class="fas fa-birthday-cake"></i> Âge: <span id="age">-</span> ans</div>
-      <div class="result-item"><i class="fas fa-hourglass-half"></i> Jours avant anniv.: <span id="daysToBirthday">-</span></div>
-      <div class="result-item"><i class="fas fa-chart-line"></i> IMC: <span id="bmi">-</span></div>
-      <div class="result-item"><i class="fas fa-fire-alt"></i> Métabolisme: <span id="bmr">-</span> kcal</div>
-      <div class="result-item"><i class="fas fa-running"></i> Besoin Énerg.: <span id="tdee">-</span> kcal</div>
-      <div class="progress-bar">
-        <div class="progress" id="lifeProgress"></div>
+      
+      <!-- Bouton de soumission sur deux colonnes -->
+      <div class="col-span-1 md:col-span-2">
+        <button type="button" onclick="showMainInterface()" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors">Créer le Compte</button>
       </div>
-      <div class="result-item"><i class="fas fa-heartbeat"></i> Vie rest.: <span id="remainingLife">-</span>%</div>
-    </div>
+    </form>
   </div>
 
-  <script>
-    $(document).ready(function() {
-      $('#birthDate, #weight, #height, #activityLevel').on('input', function() {
-        validateInputs();
-        calculateMetrics();
-      });
+  <!-- Calculs -->
+  <div id="mainInterface" style="display: none;" class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
 
-      function validateInputs() {
-        const weight = parseFloat($('#weight').val());
-        const height = parseFloat($('#height').val());
+    <!-- Sections with Results -->
+    <div class="sections-container space-y-6">
+      <!-- Profile -->
+      <div id="profileSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Profil Utilisateur</h3>
+        <p><strong>Nom :</strong> <span id="displayNom"></span></p>
+        <p><strong>Prénom :</strong> <span id="displayPrenom"></span></p>
+        <p><strong>Date de Naissance :</strong> <span id="displayDateNaissance"></span></p>
+        <p><strong>Taille :</strong> <span id="displayTaille"></span> cm</p>
+        <p><strong>Poids :</strong> <span id="displayPoids"></span> kg</p>
+      </div>
 
-        if (weight <= 0 || weight > 300 || isNaN(weight)) {
-          $('#weightError').text("Veuillez entrer un poids valide (1-300 kg).");
-        } else {
-          $('#weightError').text("");
-        }
+      <!-- Health -->
+      <div id="healthSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Santé</h3>
+        <p><strong>Âge :</strong> <span id="ageResult"></span> ans</p>
+        <p><strong>IMC :</strong> <span id="imcResult"></span></p>
+        <p><strong>Poids Idéal :</strong> <span id="poidsIdealResult"></span> kg</p>
+        <p><strong>Besoins Caloriques :</strong> <span id="caloriesResult"></span> kcal</p>
+      </div>
 
-        if (height <= 50 || height > 250 || isNaN(height)) {
-          $('#heightError').text("Veuillez entrer une taille valide (50-250 cm).");
-        } else {
-          $('#heightError').text("");
-        }
-      }
+      <!-- Finance -->
+      <div id="financeSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Finances</h3>
+        <p><strong>Dépenses/Rapport de Revenus :</strong> <span id="ratioResult"></span>%</p>
+        <p><strong>Dépenses Restantes :</strong> <span id="restantResult"></span> €</p>
+        <p><strong>Épargne Annuelle :</strong> <span id="epargneResult"></span> €</p>
+        <canvas id="financeChart" width="400" height="200" class="mt-4"></canvas>
+      </div>
+    </div>
 
-      function calculateMetrics() {
-        const birthDate = new Date($('#birthDate').val());
-        const today = new Date();
-        const age = today.getFullYear() - birthDate.getFullYear();
-        const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-        const daysToBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
-        const weight = parseFloat($('#weight').val());
-        const height = parseFloat($('#height').val());
+    <!-- Navigation -->
+    <nav class="flex justify-around mt-6">
+      <a href="#" onclick="showSection('profileSection')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-user-circle text-2xl"></i> Profil</a>
+      <a href="#" onclick="showSection('healthSection')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-heartbeat text-2xl"></i> Santé</a>
+      <a href="#" onclick="showSection('financeSection')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-wallet text-2xl"></i> Finances</a>
+    </nav>
 
-        if (weight > 0 && height > 0) {
-          const bmi = (weight / ((height / 100) ** 2)).toFixed(1);
-          const bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+  </div>
 
-          let activityFactor;
-          switch(parseInt($('#activityLevel').val())) {
-            case 1: activityFactor = 1.2; break;
-            case 2: activityFactor = 1.375; break;
-            case 3: activityFactor = 1.55; break;
-            case 4: activityFactor = 1.725; break;
-            case 5: activityFactor = 1.9; break;
-          }
-          const tdee = (bmr * activityFactor).toFixed(0);
-
-          $('#age').text(age);
-          $('#daysToBirthday').text(daysToBirthday);
-          $('#bmi').text(bmi);
-          $('#bmr').text(bmr.toFixed(0));
-          $('#tdee').text(tdee);
-
-          const lifeExpectancy = 82;
-          const lifeRemaining = ((lifeExpectancy - age) / lifeExpectancy * 100).toFixed(0);
-          $('#remainingLife').text(lifeRemaining);
-          $('#lifeProgress').css('width', lifeRemaining + '%');
-        }
-      }
-    });
-  </script>
-
+<!-- 📝 Gestion des données et stockage : collecte des données et sauvegarde localStorage -->
+<!-- 👤 Contrôle de la vue : navigation entre sections et affichage du profil -->
+<!-- 📐 Calculs et Graphiques : calculs de santé/finance et génération de graphiques -->
+<script src="script/mainInterface.js"></script>
 </body>
 </html>
+

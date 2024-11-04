@@ -1,123 +1,87 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- 🌐 SEO Meta Tags -->  
   <meta charset="UTF-8">
+  <meta name="description" content="Calculatrice JavaScript">
+  <meta name="keywords" content="Santé, Finance, Temps, Productivité, Espace">
+  <meta name="author" content="Patrick Alexandre Assis">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculatrice Santé et Finance</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <title>Calculatrice Santé & Finances</title>
+
+  <!-- 🚀 Bibliothèques JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+  <!-- 🎨 Styles UI & UX -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+
 </head>
-<body class="bg-gray-100">
+<body>
 
-<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
-  <h1 class="text-2xl font-bold text-center mb-5">Calculatrice Santé et Finance</h1>
-  
-  <!-- Formulaire -->
-  <form id="calculatrice-form" class="space-y-4">
-    <div class="flex flex-wrap gap-4">
-      <div class="flex-1">
-        <label class="block font-semibold">Nom <span class="text-red-500">*</span></label>
-        <input type="text" id="nom" class="w-full border-gray-300 rounded-md shadow-sm" required>
-      </div>
-      <div class="flex-1">
-        <label class="block font-semibold">Prénom <span class="text-red-500">*</span></label>
-        <input type="text" id="prenom" class="w-full border-gray-300 rounded-md shadow-sm" required>
-      </div>
-    </div>
+  <!-- Input -->
+  <div id="signupScreen">
+    <h2>Création de Compte</h2>
+    <form id="signupForm">
+      <label for="nom">Nom <input type="text" id="nom" name="nom" required></label>
+      <label for="prenom">Prénom <input type="text" id="prenom" name="prenom" required></label>
+      <label for="date_naissance">Date de Naissance <input type="date" id="date_naissance" name="date_naissance" required min="1900-01-01" max="2024-11-04"></label>
+      <label for="taille">Taille (cm) <input type="number" id="taille" name="taille" required min="50" max="250"></label>
+      <label for="poids">Poids (kg) <input type="number" id="poids" name="poids" required min="30" max="200" step="0.1"></label>
+      <label for="revenus">Revenus Mensuels (€) <input type="number" id="revenus" name="revenus" required min="0" step="50"></label>
+      <label for="depenses">Dépenses Mensuelles (€) <input type="number" id="depenses" name="depenses" required min="0" step="50"></label>
+      <button type="button" onclick="showMainInterface()">Créer le Compte</button>
+    </form>
+  </div>
 
-    <div class="flex flex-wrap gap-4">
-      <div class="flex-1">
-        <label class="block font-semibold">Date de naissance 🎂</label>
-        <input type="date" id="date_naissance" class="w-full border-gray-300 rounded-md shadow-sm">
-      </div>
-      <div class="flex-1">
-        <label class="block font-semibold">Taille (cm) 📏</label>
-        <input type="number" id="taille" min="50" max="250" class="w-full border-gray-300 rounded-md shadow-sm">
-      </div>
-      <div class="flex-1">
-        <label class="block font-semibold">Poids (kg) ⚖️</label>
-        <input type="number" id="poids" min="10" max="300" class="w-full border-gray-300 rounded-md shadow-sm">
-      </div>
-    </div>
+  <!-- Résultats -->
+  <div id="mainInterface" style="display: none;">
+    <!-- Navigation -->
+    <nav class="navigation">
+      <a href="#" class="nav-link" onclick="showSection('profileSection')">
+        <i class="fas fa-user-circle icon"></i> Profil
+      </a>
+      <a href="#" class="nav-link" onclick="showSection('healthSection')">
+        <i class="fas fa-heartbeat icon"></i> Santé
+      </a>
+      <a href="#" class="nav-link" onclick="showSection('financeSection')">
+        <i class="fas fa-wallet icon"></i> Finances
+      </a>
+    </nav>
 
-    <div class="flex flex-wrap gap-4">
-      <div class="flex-1">
-        <label class="block font-semibold">Niveau d'activité physique (NAP) 🏃</label>
-        <input type="range" id="nap" min="1" max="2.5" step="0.1" class="w-full">
+    <!-- Sections with Enhanced UI -->
+    <div class="sections-container">
+      <!-- Profile Section -->
+      <div id="profileSection" class="section" style="display: none;">
+        <h3 class="section-title profile-title">Profil Utilisateur</h3>
+        <p><strong>Nom :</strong> <span id="displayNom" class="section-detail"></span></p>
+        <p><strong>Prénom :</strong> <span id="displayPrenom" class="section-detail"></span></p>
+        <p><strong>Date de Naissance :</strong> <span id="displayDateNaissance" class="section-detail"></span></p>
+        <p><strong>Taille :</strong> <span id="displayTaille" class="section-detail"></span> cm</p>
+        <p><strong>Poids :</strong> <span id="displayPoids" class="section-detail"></span> kg</p>
       </div>
-      <div class="flex-1">
-        <label class="block font-semibold">Revenus (€) 💶</label>
-        <input type="number" id="revenus" min="0" class="w-full border-gray-300 rounded-md shadow-sm">
-      </div>
-      <div class="flex-1">
-        <label class="block font-semibold">Dépenses (€) 💸</label>
-        <input type="number" id="depenses" min="0" class="w-full border-gray-300 rounded-md shadow-sm">
-      </div>
-    </div>
-  </form>
 
-  <!-- Section Résultats -->
-  <div class="mt-6 flex justify-between space-x-4">
-    <!-- Résultats Financiers -->
-    <div class="flex-1 bg-blue-100 p-4 rounded-lg">
-      <h2 class="text-xl font-bold text-blue-700">Argent <i class="fas fa-euro-sign"></i></h2>
-      <p><strong>Pourcentage Dépenses/Revenus (%) 💸 :</strong> <span id="pourcentage_depenses"></span></p>
-      <p><strong>Dépenses Restantes (€) 🏦 :</strong> <span id="depenses_restant"></span></p>
-      <p><strong>Épargne Annuelle (€) 💰 :</strong> <span id="epargne_annuelle"></span></p>
-    </div>
+      <!-- Health Section -->
+      <div id="healthSection" class="section" style="display: none;">
+        <h3 class="section-title health-title">Santé</h3>
+        <p><strong>Âge :</strong> <span id="ageResult" class="health-detail"></span> ans</p>
+        <p><strong>IMC :</strong> <span id="imcResult" class="health-detail"></span></p>
+        <p><strong>Poids Idéal :</strong> <span id="poidsIdealResult" class="health-detail"></span> kg</p>
+        <p><strong>Besoins Caloriques :</strong> <span id="caloriesResult" class="health-detail"></span> kcal</p>
+      </div>
 
-    <!-- Résultats Santé -->
-    <div class="flex-1 bg-green-100 p-4 rounded-lg">
-      <h2 class="text-xl font-bold text-green-700">Santé <i class="fas fa-heartbeat"></i></h2>
-      <p><strong>Âge 🧑‍🎓 :</strong> <span id="age"></span></p>
-      <p><strong>IMC 🏋️‍♂️ :</strong> <span id="imc"></span></p>
-      <p><strong>Poids Idéal 🏆 :</strong> <span id="poids_ideal"></span></p>
-      <p><strong>Besoins Caloriques Journaliers 🍏 :</strong> <span id="calories"></span></p>
+      <!-- Finance Section -->
+      <div id="financeSection" class="section" style="display: none;">
+        <h3 class="section-title finance-title">Finances</h3>
+        <p><strong>Dépenses/Rapport de Revenus :</strong> <span id="ratioResult" class="finance-detail"></span>%</p>
+        <p><strong>Dépenses Restantes :</strong> <span id="restantResult" class="finance-detail"></span> €</p>
+        <p><strong>Épargne Annuelle :</strong> <span id="epargneResult" class="finance-detail"></span> €</p>
+        <canvas id="financeChart" width="400" height="200" class="finance-chart"></canvas>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  $(document).ready(function () {
-    $("#calculatrice-form input").on("input", function () {
-      const dateNaissance = $("#date_naissance").val();
-      const taille = parseFloat($("#taille").val());
-      const poids = parseFloat($("#poids").val());
-      const nap = parseFloat($("#nap").val());
-      const revenus = parseFloat($("#revenus").val());
-      const depenses = parseFloat($("#depenses").val());
-
-      // Calcul de l'âge
-      let age = dateNaissance ? moment().diff(dateNaissance, 'years') : '';
-      $("#age").text(age);
-
-      // Calcul de l'IMC
-      let imc = (poids && taille) ? (poids / ((taille / 100) ** 2)).toFixed(2) : '';
-      $("#imc").text(imc);
-
-      // Calcul du poids idéal
-      let poidsIdeal = taille ? (50 + 0.91 * (taille - 152)).toFixed(2) : '';
-      $("#poids_ideal").text(poidsIdeal);
-
-      // Calcul du BMR
-      let bmr = poids ? (10 * poids + 6.25 * taille - 5 * age + 5) : '';
-      let calories = (bmr && nap) ? (bmr * nap).toFixed(0) : '';
-      $("#calories").text(calories);
-
-      // Calcul financier
-      let pourcentageDepenses = (revenus && depenses) ? ((depenses / revenus) * 100).toFixed(2) + "%" : '';
-      $("#pourcentage_depenses").text(pourcentageDepenses);
-
-      let depensesRestant = (revenus && depenses) ? (revenus - depenses).toFixed(2) : '';
-      $("#depenses_restant").text(depensesRestant);
-
-      let epargneAnnuelle = (revenus && depenses) ? ((revenus - depenses) * 12).toFixed(2) : '';
-      $("#epargne_annuelle").text(epargneAnnuelle);
-    });
-  });
-</script>
-
+<script src="script/mainInterface.js"></script>
 </body>
 </html>

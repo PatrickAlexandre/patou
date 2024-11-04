@@ -1,135 +1,123 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculatrice Finance & Santé</title>
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- jQuery, Lodash, Moment.js, Health.js, Healthcalc -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="path/to/health.js"></script>
-    <script src="path/to/healthcalc.js"></script>
+  <!-- 🌐 SEO Meta Tags -->  
+  <meta charset="UTF-8">
+  <meta name="description" content="Calculatrice JavaScript">
+  <meta name="keywords" content="Santé, Finance, Temps, Productivité, Espace">
+  <meta name="author" content="Patrick Alexandre Assis">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculatrice Santé & Finances</title>
+
+  <!-- 🌈 Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- 🚀 Bibliothèques JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+  <!-- 🎨 Styles UI & UX -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 p-6">
-    <div class="container mx-auto">
-        <h1 class="text-3xl font-bold text-center mb-8">Calculatrice Finance & Santé</h1>
-        
-        <!-- Formulaire -->
-        <form id="calculator-form" class="bg-white p-6 rounded-lg shadow-lg space-y-4">
-            <h2 class="text-xl font-bold text-center">Informations Personnelles</h2>
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-            <!-- Champ de saisie -->
-            <div class="space-y-4">
-                <div>
-                    <label for="firstName" class="block font-medium">Prénom :</label>
-                    <input type="text" id="firstName" class="w-full border border-gray-300 p-2 rounded-lg">
-                </div>
-                <div>
-                    <label for="lastName" class="block font-medium">Nom :</label>
-                    <input type="text" id="lastName" class="w-full border border-gray-300 p-2 rounded-lg">
-                </div>
-                <div>
-                    <label for="birthDate" class="block font-medium">Date de naissance :</label>
-                    <input type="date" id="birthDate" class="w-full border border-gray-300 p-2 rounded-lg">
-                </div>
-                <div>
-                    <label for="height" class="block font-medium">Taille (cm) :</label>
-                    <input type="number" id="height" class="w-full border border-gray-300 p-2 rounded-lg">
-                </div>
-                <div>
-                    <label for="weight" class="block font-medium">Poids (kg) :</label>
-                    <input type="number" id="weight" class="w-full border border-gray-300 p-2 rounded-lg">
-                </div>
-                <div>
-                    <label for="activityLevel" class="block font-medium">Niveau d'activité physique (NAP) :</label>
-                    <input type="range" id="activityLevel" min="1" max="2.5" step="0.1" value="1.2" class="w-full">
-                </div>
-                <div>
-                    <label for="monthlyIncome" class="block font-medium">Revenus mensuels (€) :</label>
-                    <input type="number" id="monthlyIncome" class="w-full border border-gray-300 p-2 rounded-lg">
-                </div>
-                <div>
-                    <label for="monthlyExpenses" class="block font-medium">Dépenses mensuelles (€) :</label>
-                    <input type="number" id="monthlyExpenses" class="w-full border border-gray-300 p-2 rounded-lg">
-                    <button type="button" id="import-csv" class="mt-2 text-blue-500 underline">Importer CSV</button>
-                </div>
-            </div>
-        </form>
+  <!-- Input -->
+  <div id="signupScreen" class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Création de Compte</h2>
+    <form id="signupForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Informations Définitives -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Constantes</h3>
+        <label for="nom" class="block">
+          <span class="text-gray-700">Nom</span>
+          <input type="text" id="nom" name="nom" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="prenom" class="block mt-4">
+          <span class="text-gray-700">Prénom</span>
+          <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="date_naissance" class="block mt-4">
+          <span class="text-gray-700">Date de Naissance</span>
+          <input type="date" id="date_naissance" name="date_naissance" required min="1900-01-01" max="2024-11-04" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="taille" class="block mt-4">
+          <span class="text-gray-700">Taille (cm)</span>
+          <input type="number" id="taille" name="taille" required min="50" max="250" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>        
+      </div>
 
-        <!-- Résultats -->
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Section Finances -->
-            <div id="finance-results" class="bg-blue-900 text-white p-6 rounded-lg">
-                <h2 class="text-xl font-bold mb-4"><i class="fas fa-euro-sign"></i> Finance</h2>
-                <p><span class="font-bold">Pourcentage des dépenses/revenus :</span> <span id="expensePercentage"></span> %</p>
-                <p><span class="font-bold">Dépenses mensuelles restantes :</span> <span id="remainingIncome"></span> €</p>
-                <p><span class="font-bold">Épargne annuelle potentielle :</span> <span id="annualSavings"></span> €</p>
-            </div>
-            
-            <!-- Section Santé -->
-            <div id="health-results" class="bg-teal-600 text-white p-6 rounded-lg">
-                <h2 class="text-xl font-bold mb-4"><i class="fas fa-heartbeat"></i> Santé</h2>
-                <p><span class="font-bold">Âge :</span> <span id="age"></span> ans</p>
-                <p><span class="font-bold">IMC :</span> <span id="bmi"></span></p>
-                <p><span class="font-bold">Poids idéal :</span> <span id="idealWeight"></span> kg</p>
-                <p><span class="font-bold">Besoins caloriques journaliers :</span> <span id="dailyCalories"></span> kcal</p>
-            </div>
-        </div>
+      <!-- Informations qui changent avec le temps -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Variables</h3>
+        <label for="poids" class="block mt-4">
+          <span class="text-gray-700">Poids (kg)</span>
+          <input type="number" id="poids" name="poids" required min="30" max="200" step="0.1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="revenus" class="block mt-4">
+          <span class="text-gray-700">Revenus Mensuels (€)</span>
+          <input type="number" id="revenus" name="revenus" required min="0" step="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+        <label for="depenses" class="block mt-4">
+          <span class="text-gray-700">Dépenses Mensuelles (€)</span>
+          <input type="number" id="depenses" name="depenses" required min="0" step="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        </label>
+      </div>
+      
+      <!-- Bouton de soumission sur deux colonnes -->
+      <div class="col-span-1 md:col-span-2">
+        <button type="button" onclick="showMainInterface()" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors">Créer le Compte</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Calculs -->
+  <div id="mainInterface" style="display: none;" class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+
+    <!-- Sections with Results -->
+    <div class="sections-container space-y-6">
+      <!-- Profile -->
+      <div id="profileSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Profil Utilisateur</h3>
+        <p><strong>Nom :</strong> <span id="displayNom"></span></p>
+        <p><strong>Prénom :</strong> <span id="displayPrenom"></span></p>
+        <p><strong>Date de Naissance :</strong> <span id="displayDateNaissance"></span></p>
+        <p><strong>Taille :</strong> <span id="displayTaille"></span> cm</p>
+        <p><strong>Poids :</strong> <span id="displayPoids"></span> kg</p>
+      </div>
+
+      <!-- Health -->
+      <div id="healthSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Santé</h3>
+        <p><strong>Âge :</strong> <span id="ageResult"></span> ans</p>
+        <p><strong>IMC :</strong> <span id="imcResult"></span></p>
+        <p><strong>Poids Idéal :</strong> <span id="poidsIdealResult"></span> kg</p>
+        <p><strong>Besoins Caloriques :</strong> <span id="caloriesResult"></span> kcal</p>
+      </div>
+
+      <!-- Finance -->
+      <div id="financeSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Finances</h3>
+        <p><strong>Dépenses/Rapport de Revenus :</strong> <span id="ratioResult"></span>%</p>
+        <p><strong>Dépenses Restantes :</strong> <span id="restantResult"></span> €</p>
+        <p><strong>Épargne Annuelle :</strong> <span id="epargneResult"></span> €</p>
+        <canvas id="financeChart" width="400" height="200" class="mt-4"></canvas>
+      </div>
     </div>
 
-    <script>
-        function calculateResults() {
-            // Collecte des données
-            const birthDate = moment($('#birthDate').val());
-            const height = parseFloat($('#height').val());
-            const weight = parseFloat($('#weight').val());
-            const nap = parseFloat($('#activityLevel').val());
-            const monthlyIncome = parseFloat($('#monthlyIncome').val());
-            const monthlyExpenses = parseFloat($('#monthlyExpenses').val());
+    <!-- Navigation -->
+    <nav class="flex justify-around mt-6">
+      <a href="#" onclick="showSection('profileSection')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-user-circle text-2xl"></i> Profil</a>
+      <a href="#" onclick="showSection('healthSection')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-heartbeat text-2xl"></i> Santé</a>
+      <a href="#" onclick="showSection('financeSection')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-wallet text-2xl"></i> Finances</a>
+    </nav>
 
-            // Calcul âge
-            const age = moment().diff(birthDate, 'years');
-            $('#age').text(age);
+  </div>
 
-            // Calcul IMC
-            const bmi = (weight / Math.pow(height / 100, 2)).toFixed(2);
-            $('#bmi').text(bmi);
-
-            // Calcul poids idéal (Formule de Devine)
-            const idealWeight = (height - 100 + age / 10) * 0.9;
-            $('#idealWeight').text(idealWeight.toFixed(2));
-
-            // Calcul BMR (Formule de Harris-Benedict pour les hommes, changez la formule pour les femmes si besoin)
-            const bmr = (88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)).toFixed(2);
-            
-            // Besoins caloriques journaliers
-            const dailyCalories = (bmr * nap).toFixed(2);
-            $('#dailyCalories').text(dailyCalories);
-
-            // Calcul finance
-            if (monthlyIncome && monthlyExpenses) {
-                const expensePercentage = ((monthlyExpenses / monthlyIncome) * 100).toFixed(2);
-                const remainingIncome = (monthlyIncome - monthlyExpenses).toFixed(2);
-                const annualSavings = (remainingIncome * 12).toFixed(2);
-                
-                $('#expensePercentage').text(expensePercentage);
-                $('#remainingIncome').text(remainingIncome);
-                $('#annualSavings').text(annualSavings);
-            }
-        }
-
-        // Calcul en temps réel
-        $('#calculator-form input, #calculator-form select').on('input change', calculateResults);
-
-        // Import CSV (fonctionnalité à ajouter)
-        $('#import-csv').click(function() {
-            alert("Fonction d'import CSV à implémenter");
-        });
-    </script>
+<!-- 📝 Gestion des données et stockage : collecte des données et sauvegarde localStorage -->
+<!-- 👤 Contrôle de la vue : navigation entre sections et affichage du profil -->
+<!-- 📐 Calculs et Graphiques : calculs de santé/finance et génération de graphiques -->
+<script src="script/mainInterface.js"></script>
 </body>
 </html>
+

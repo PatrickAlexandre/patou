@@ -1,0 +1,144 @@
+/* Style général */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Container principal */
+#signupScreen, #mainInterface {
+  background: linear-gradient(145deg, #1f1f1f, #292929);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Titres */
+h2, h3 {
+  color: #00d4ff;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* Formulaire */
+form div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+label {
+  color: #00d4ff;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"], input[type="date"], input[type="number"] {
+  background: #1e1e1e;
+  border: none;
+  border-radius: 8px;
+  color: #e0e0e0;
+  padding: 10px;
+  font-size: 1rem;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+input::placeholder {
+  color: #888;
+}
+
+button {
+  background: #00d4ff;
+  color: #121212;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #0097cc;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+nav a {
+  color: #00d4ff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #0097cc;
+}
+
+/* Sections */
+#profileSection, #healthSection, #financeSection {
+  background: #1f1f1f;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Texte et données */
+p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  color: #e0e0e0;
+}
+
+span {
+  color: #00d4ff;
+}
+
+/* Effets futuristes */
+input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus {
+  outline: none;
+  border: 1px solid #00d4ff;
+  box-shadow: 0 0 8px #00d4ff, inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+canvas {
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+/* Animation futuriste */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+  }
+  50% {
+    box-shadow: 0 0 20px #00d4ff, 0 0 30px #00d4ff, 0 0 40px #00d4ff;
+  }
+  100% {
+    box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+  }
+}
+
+button:hover {
+  animation: glow 1s infinite alternate;
+}

@@ -1,124 +1,110 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur de Santé</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .result-icon {
-            font-size: 1.5em;
-            margin-right: 10px;
-        }
-        .progress-bar {
-            width: 100%;
-            background-color: #f3f3f3;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        .progress-bar-inner {
-            height: 20px;
-            background-color: #4caf50;
-            width: 0%;
-            transition: width 1s;
-        }
-        .result {
-            margin: 15px 0;
-            font-size: 1.1em;
-        }
-    </style>
+  <!-- 🌐 SEO Meta Tags -->  
+  <meta charset="UTF-8">
+  <meta name="description" content="Calculatrice JavaScript">
+  <meta name="keywords" content="Santé, Finance, Temps, Productivité, Espace">
+  <meta name="author" content="Patrick Alexandre Assis">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculatrice Santé & Finances</title>
+
+  <!-- 🌈 Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- 🚀 Bibliothèques JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+  <!-- 🎨 Styles UI & UX -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-<div class="container">
-    <h2>Calculateur de Santé</h2>
-    <form id="healthForm">
-        <label>Date de Naissance : </label>
-        <input type="date" id="dob" required><br><br>
-
-        <label>Taille (cm) : </label>
-        <input type="number" id="height" required><br><br>
-
-        <label>Poids (kg) : </label>
-        <input type="number" id="weight" required><br><br>
-
-        <label>Niveau d'Activité (NAP) : </label>
-        <input type="range" id="activityLevel" min="1" max="2.5" step="0.1" value="1.2">
-        <span id="activityLabel">1.2</span><br><br>
-
-        <button type="button" id="calculateButton">Calculer</button>
+  <!-- Input -->
+  <div id="signupScreen" class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Création de Compte</h2>
+    <form id="signupForm" class="space-y-4">
+      <label for="nom" class="block">
+        <span class="text-gray-700">Nom</span>
+        <input type="text" id="nom" name="nom" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <label for="prenom" class="block">
+        <span class="text-gray-700">Prénom</span>
+        <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <label for="date_naissance" class="block">
+        <span class="text-gray-700">Date de Naissance</span>
+        <input type="date" id="date_naissance" name="date_naissance" required min="1900-01-01" max="2024-11-04" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <label for="taille" class="block">
+        <span class="text-gray-700">Taille (cm)</span>
+        <input type="number" id="taille" name="taille" required min="50" max="250" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <label for="poids" class="block">
+        <span class="text-gray-700">Poids (kg)</span>
+        <input type="number" id="poids" name="poids" required min="30" max="200" step="0.1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <label for="revenus" class="block">
+        <span class="text-gray-700">Revenus Mensuels (€)</span>
+        <input type="number" id="revenus" name="revenus" required min="0" step="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <label for="depenses" class="block">
+        <span class="text-gray-700">Dépenses Mensuelles (€)</span>
+        <input type="number" id="depenses" name="depenses" required min="0" step="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+      </label>
+      <button type="button" onclick="showMainInterface()" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors">Créer le Compte</button>
     </form>
+  </div>
 
-    <div class="result" id="ageResult"><i class="fas fa-birthday-cake result-icon"></i> Âge : <span id="age"></span></div>
-    <div class="result" id="bmrResult"><i class="fas fa-fire result-icon"></i> BMR : <span id="bmr"></span> kcal</div>
-    <div class="result" id="tdeeResult"><i class="fas fa-bolt result-icon"></i> TDEE : <span id="tdee"></span> kcal</div>
-    <div class="result" id="bmiResult"><i class="fas fa-weight result-icon"></i> IMC : <span id="bmi"></span></div>
+  <!-- Résultats -->
+  <div id="mainInterface" style="display: none;" class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+    <!-- Navigation -->
+    <nav class="flex justify-around mb-6">
+      <a href="#" class="nav-link text-indigo-600 hover:text-indigo-800" onclick="showSection('profileSection')">
+        <i class="fas fa-user-circle text-2xl"></i> Profil
+      </a>
+      <a href="#" class="nav-link text-indigo-600 hover:text-indigo-800" onclick="showSection('healthSection')">
+        <i class="fas fa-heartbeat text-2xl"></i> Santé
+      </a>
+      <a href="#" class="nav-link text-indigo-600 hover:text-indigo-800" onclick="showSection('financeSection')">
+        <i class="fas fa-wallet text-2xl"></i> Finances
+      </a>
+    </nav>
 
-    <div class="progress-bar">
-        <div class="progress-bar-inner" id="lifeProgress"></div>
+    <!-- Sections with Enhanced UI -->
+    <div class="sections-container space-y-6">
+      <!-- Profile Section -->
+      <div id="profileSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Profil Utilisateur</h3>
+        <p><strong>Nom :</strong> <span id="displayNom"></span></p>
+        <p><strong>Prénom :</strong> <span id="displayPrenom"></span></p>
+        <p><strong>Date de Naissance :</strong> <span id="displayDateNaissance"></span></p>
+        <p><strong>Taille :</strong> <span id="displayTaille"></span> cm</p>
+        <p><strong>Poids :</strong> <span id="displayPoids"></span> kg</p>
+      </div>
+
+      <!-- Health Section -->
+      <div id="healthSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Santé</h3>
+        <p><strong>Âge :</strong> <span id="ageResult"></span> ans</p>
+        <p><strong>IMC :</strong> <span id="imcResult"></span></p>
+        <p><strong>Poids Idéal :</strong> <span id="poidsIdealResult"></span> kg</p>
+        <p><strong>Besoins Caloriques :</strong> <span id="caloriesResult"></span> kcal</p>
+      </div>
+
+      <!-- Finance Section -->
+      <div id="financeSection" class="section hidden">
+        <h3 class="text-xl font-semibold mb-4">Finances</h3>
+        <p><strong>Dépenses/Rapport de Revenus :</strong> <span id="ratioResult"></span>%</p>
+        <p><strong>Dépenses Restantes :</strong> <span id="restantResult"></span> €</p>
+        <p><strong>Épargne Annuelle :</strong> <span id="epargneResult"></span> €</p>
+        <canvas id="financeChart" width="400" height="200" class="mt-4"></canvas>
+      </div>
     </div>
-    <div class="result" id="lifeExpectancy"><i class="fas fa-hourglass-half result-icon"></i> Années restantes : <span id="yearsRemaining"></span></div>
-</div>
+  </div>
 
-<script>
-$(document).ready(function() {
-    const lifeExpectancy = 82;  // Espérance de vie moyenne
-
-    $("#activityLevel").on("input", function() {
-        $("#activityLabel").text($(this).val());
-    });
-
-    $("#calculateButton").click(function() {
-        const dob = $("#dob").val();
-        const height = parseFloat($("#height").val());
-        const weight = parseFloat($("#weight").val());
-        const activityLevel = parseFloat($("#activityLevel").val());
-
-        if (!dob || !height || !weight) {
-            alert("Veuillez remplir tous les champs.");
-            return;
-        }
-
-        // Calcul de l'âge
-        const age = moment().diff(moment(dob), 'years');
-        const nextBirthday = moment(dob).add(age + 1, 'years');
-        const daysToNextBirthday = nextBirthday.diff(moment(), 'days');
-        $("#age").text(`${age} ans (${daysToNextBirthday} jours avant votre prochain anniversaire)`);
-
-        // Calcul du BMR (utilisation de la formule de Harris-Benedict)
-        const bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-        $("#bmr").text(Math.round(bmr));
-
-        // Calcul du TDEE
-        const tdee = bmr * activityLevel;
-        $("#tdee").text(Math.round(tdee));
-
-        // Calcul de l'IMC
-        const heightM = height / 100;
-        const bmi = weight / (heightM * heightM);
-        $("#bmi").text(bmi.toFixed(1));
-
-        // Calcul des années restantes et barre de progression de vie
-        const yearsRemaining = lifeExpectancy - age;
-        const lifeProgressPercentage = (age / lifeExpectancy) * 100;
-        $("#yearsRemaining").text(yearsRemaining > 0 ? yearsRemaining : "Vous avez dépassé l'espérance de vie !");
-        $("#lifeProgress").css("width", lifeProgressPercentage + "%");
-    });
-});
-</script>
-
+<script src="script/mainInterface.js"></script>
 </body>
 </html>
